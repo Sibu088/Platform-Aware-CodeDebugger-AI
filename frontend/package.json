@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "start": "vite preview"
+    "preview": "vite preview --port $PORT --host",
+    "start": "vite preview --port $PORT --host"
   },
   "dependencies": {
     "@elevenlabs/client": "^0.12.0",
@@ -18,4 +18,5 @@
     "vite": "^5.2.0"
   }
 }
+
 
