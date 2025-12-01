@@ -1,9 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+// Detect if we are deploying to GitHub Pages
+const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
+
 export default defineConfig({
   plugins: [react()],
-  base: "./", // important: ensures app works at root for Render
+  base: isGitHubPages ? "/Platform-Aware-CodeDebugger-AI/" : "./",
   server: {
     port: process.env.PORT,
     host: true
