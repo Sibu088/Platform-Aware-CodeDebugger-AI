@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeDebugger AI</title>
+    <link rel="icon" type="image/x-icon" href="/src/assets/favicon.ico">
+    <script type="module" src="/src/main.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .left-panel, .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section h2 {
+            font-size: 20px;
+            color: #2a5298;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .platform-card {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .platform-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .platform-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .platform-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .solution-box {
+            background: white;
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .solution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .solution-title {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 16px;
+        }
+
+        .votes {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .vote-btn {
+            background: #e9ecef;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .vote-count {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .solution-content {
+            color: #495057;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .code-snippet {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+
+        .features {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+       /* === Futuristic Luxury Clock === */
+
+/* Wrapper */
+.clock-container {
+    display: flex;
+    justify-content: center;
+    margin: 60px 0;
+}
+
+/* Premium Glass Panel */
+.clock-glass {
+    background: rgba(20, 20, 20, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 22px;
+    padding: 35px 45px;
+    backdrop-filter: blur(18px);
+    box-shadow:
+        0 0 35px rgba(0, 0, 0, 0.7),
+        inset 0 0 25px rgba(255, 255, 255, 0.05),
+        0 0 60px rgba(30, 150, 255, 0.12); /* Gentle blue glow */
+    width: fit-content;
+    text-align: center;
+}
+
+/* LED Clock Numbers */
+.digital-clock {
+    font-family: 'Audiowide', sans-serif; /* luxury futuristic font */
+    font-size: 4.2rem;
+    letter-spacing: 2px;
+    color: #a6c9ff; /* soft luxury blue */
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    text-shadow:
+        0 0 6px rgba(150, 200, 255, 0.4),
+        0 0 18px rgba(150, 200, 255, 0.2);
+}
+
+/* Separator */
+.separator {
+    margin: 0 12px;
+    color: #90b4ff;
+    text-shadow:
+        0 0 8px rgba(130, 180, 255, 0.35);
+}
+
+/* AM/PM Label */
+.ampm {
+    font-size: 1.3rem;
+    margin-left: 8px;
+    opacity: 0.75;
+    color: #94baff;
+    text-shadow: 0 0 10px rgba(150, 200, 255, 0.25);
+}
+
+/* Date Section */
+.clock-date {
+    margin-top: 18px;
+    font-size: 1.1rem;
+    font-family: 'Poppins', sans-serif;
+    color: #bcd4ff;
+    opacity: 0.85;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(150, 200, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .digital-clock {
+        font-size: 3rem;
+    }
+    .clock-glass {
+        padding: 22px 28px;
+    }
+}
+/* === Millionaire Vibes Background === */
+body {
+    background: linear-gradient(145deg, #0f1115 0%, #1b1d23 100%);
+    /* subtle futuristic gradient */
+    color: #e6e8eb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Optional: Soft particle or glow overlay for luxury feel */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.02), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.015), transparent 50%);
+    pointer-events: none;
+}
+
+/* Subtle floating shine effect on main container */
+.container {
+    background: rgba(233, 225, 235, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 255, 200, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Optional header gradient */
+.header {
+    background: linear-gradient(135deg, #1e1f24 0%, #2c2e34 100%);
+    box-shadow: 0 5px 15px rgba(0, 255, 200, 0.08);
+}
+
+/* Buttons luxury vibe */
+.analyze-btn {
+    background: linear-gradient(135deg, #0fffc1 0%, #00a3ff 100%);
+    color: #111;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 200, 0.25);
+}
+
+/* Hover glow effect */
+.analyze-btn:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 200, 0.5);
+}
+
+/* Scrollbar luxury look */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1b1d23;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ffc1;
+    border-radius: 4px;
+}
+/* Make platform card text bold and black */
+.platform-card {
+    color: #000000;         /* Black text */
+    font-weight: 700;       /* Bold text */
+    text-align: center;     /* Centered */
+}
+
+/* Ensure platform names stay bold and black */
+.platform-card .platform-name {
+    font-size: 18px;       /* Bigger text */
+    font-weight: 700;      /* Bold */
+    color: #000000;        /* Black */
+}
+
+/* Optional: make icons a bit bigger and bold (emoji scale) */
+.platform-card .platform-icon {
+    font-size: 36px;       /* Bigger icon */
+}
+/* Full-page background image */
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e6e8eb;
+    background: url('/boat.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Optional overlay for readability and luxury vibe */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.35); /* soft dark overlay */
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Make the app content appear above the overlay */
+.container, .clock-container, .main-content {
+    position: relative;
+    z-index: 1;
+    background: transparent; /* keep background image visible */
+}
+
+/* Optional: subtle floating effect for app panels */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.container, .clock-container {
+    animation: float 10s ease-in-out infinite;
+}
+.platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .platform-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            color: #000000;
+            font-weight: 700;
+        }
+
+        /* Luxury shimmer effect on hover */
+        .platform-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(0, 255, 193, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .platform-card:hover::before {
+            opacity: 1;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        /* Premium hover effect */
+        .platform-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: #00ffc1;
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
+            box-shadow: 
+                0 20px 40px rgba(0, 255, 193, 0.3),
+                0 0 30px rgba(0, 255, 193, 0.2),
+                inset 0 0 20px rgba(0, 255, 193, 0.05);
+        }
+
+        /* Glow pulse effect */
+        .platform-card:hover {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 20px 40px rgba(0, 255, 193, 0.3),
+                    0 0 30px rgba(0, 255, 193, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 20px 50px rgba(0, 255, 193, 0.4),
+                    0 0 40px rgba(0, 255, 193, 0.3);
+            }
+        }
+
+        /* Selected state */
+        .platform-card.selected {
+            border-color: #00ffc1;
+            background: linear-gradient(135deg, #0fffc1 0%, #00a3ff 100%);
+            color: #111;
+            box-shadow: 0 10px 30px rgba(0, 255, 193, 0.4);
+        }
+
+        .platform-card.selected:hover {
+            background: linear-gradient(135deg, #1fffcb 0%, #10b3ff 100%);
+        }
+
+        .platform-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+        }
+
+        .platform-card:hover .platform-icon {
+            transform: rotateY(360deg) scale(1.2);
+        }
+
+        .platform-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            transition: all 0.3s;
+        }
+
+        .platform-card:hover .platform-name {
+            color: #00ffc1;
+            text-shadow: 0 0 10px rgba(0, 255, 193, 0.5);
+        }
+
+        .platform-card.selected .platform-name {
+            color: #111;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+        #pauseBtn {
+    background: linear-gradient(135deg, #4facfe, #00f2fe); /* cool gradient */
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  #pauseBtn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  }
+
+  #pauseBtn:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  /* Optional: add a subtle glowing effect when speaking */
+  #pauseBtn.speaking {
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.8), 0 0 30px rgba(0, 242, 254, 0.5);
+  }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                <div class="logo">🔧</div>
+                Platform-Aware CodeDebugger AI: BY Sibu
+            </h1>
+            <div style="display: flex; gap: 15px;">
+             
+
+            </div>
+        </div>
+<!-- ⏱ Retro Digital Clock -->
+<div class="clock-container">
+    <div class="clock-glass">
+        <div class="digital-clock" id="digitalClock">
+            <span id="hours">00</span>
+            <span class="separator">:</span>
+            <span id="minutes">00</span>
+            <span class="separator">:</span>
+            <span id="seconds">00</span>
+            <span id="ampm" class="ampm">AM</span>
+        </div>
+        <div class="clock-date" id="clockDate"></div>
+    </div>
+    
+    <script>
+function updateClock() {
+    const now = new Date();
+
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    // Convert to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    // Update DOM
+    document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    document.getElementById("ampm").textContent = ampm;
+
+    // Date
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dayName = days[now.getDay()];
+    const day = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+
+    document.getElementById("clockDate").textContent =
+        `${dayName}, ${day} ${month} ${year}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+<script type="module">
+    const AGENT_URL = import.meta.env.VITE_ELEVENLABS_AGENT_URL;
+
+    // Wake word detection ("Hey Sibu")
+    let listening = false;
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = async (e) => {
+      const transcript = Array.from(e.results)
+        .map(r => r[0].transcript.toLowerCase())
+        .join('');
+
+      if (transcript.includes('hey sibu') && !listening) {
+        listening = true;
+        wakeUp();
+        setTimeout(() => listening = false, 15000);
+      }
+    };
+
+    function wakeUp() {
+      document.querySelectorAll('.phone-wrapper').forEach(p => {
+        p.classList.add('listening');
+        setTimeout(() => p.classList.remove('listening'), 10000);
+      });
+
+      // Play greeting
+      const utterance = new SpeechSynthesisUtterance("Hi Sibu, how can I assist you with your research and code today?");
+      utterance.rate = 0.9;
+      speechSynthesis.speak(utterance);
+
+      // Connect to your ElevenLabs agent
+      setTimeout(() => {
+        const iframe = document.createElement('iframe');
+        iframe.src = AGENT_URL;
+        iframe.style.position = 'fixed';
+        iframe.style.bottom = '20px';
+        iframe.style.right = '20px';
+        iframe.style.width = '380px';
+        iframe.style.height = '600px';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '20px';
+        iframe.style.boxShadow = '0 0 60px rgba(0,255,200,0.6)';
+        iframe.style.zIndex = '9999';
+        document.body.appendChild(iframe);
+      }, 3000);
+    }
+
+    // Auto-greet on load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.phone-wrapper').forEach(p => p.classList.add('speaking'));
+        const greet = new SpeechSynthesisUtterance("Hi Sibu, how can I assist you with your research and code today?");
+        greet.onend = () => document.querySelectorAll('.phone-wrapper').forEach(p => p.classList.remove('speaking'));
+        speechSynthesis.speak(greet);
+      }, 1000);
+    });
+
+    // Start listening
+    recognition.start();
+  </script> 
+<button id="pauseBtn">⏸️ Pause</button>
+
+<script type="module">
+function animatePhones(state) {
+  console.log('Phones animation:', state);
+}
+
+let speaking = false;
+let timeoutId = null;
+let audioInstance = null; // For Cartesia
+let usingBrowserTTS = false;
+
+function speakSolution() {
+  if (speaking) return;
+
+  const solutionText =
+    document.querySelector('.solution-content')?.innerText ||
+    document.querySelector('.right-panel')?.innerText ||
+    "No solution found yet.";
+
+  let cleanText = solutionText
+    .replace(/Primary Solution.*/i, '')
+    .replace(/VSCode Specific.*/i, '')
+    .replace(/Click to expand.*/gi, '')
+    .replace(/```[\s\S]*?```/g, 'Here is the fixed code: ')
+    .replace(/\*/g, '')
+    .replace(/\n+/g, '. ')
+    .trim();
+
+  if (cleanText.length < 10) return;
+
+  const CARTESIA_KEY = import.meta.env.VITE_CARTESIA_KEY;
+  speaking = true;
+  usingBrowserTTS = false;
+
+  fetch('https://api.cartesia.ai/tts/bytes', {
+    method: 'POST',
+    headers: {
+      'Cartesia-Version': '2025-04-16',
+      'X-API-Key': CARTESIA_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model_id: 'sonic-3',
+      transcript: `Here’s your fix, Sibu. ${cleanText}`,
+      voice: {
+        mode: 'id',
+        id: '6ccbfb76-1fc6-48f7-b71d-91ac6298247b'
+      },
+      output_format: {
+        container: 'wav',
+        encoding: 'pcm_f32le',
+        sample_rate: 44100
+      }
+    })
+  })
+  .then(r => {
+    if (!r.ok) throw new Error("Cartesia TTS failed");
+    return r.blob();
+  })
+  .then(blob => {
+    audioInstance = new Audio(URL.createObjectURL(blob));
+    audioInstance.play();
+    animatePhones('speaking');
+    audioInstance.onended = () => {
+      animatePhones('');
+      speaking = false;
+      audioInstance = null;
+      pauseBtn.innerText = '⏸️ Pause'; // Reset button when finished
+    };
+  })
+  .catch(err => {
+    console.warn("Cartesia failed → using browser voice", err);
+    usingBrowserTTS = true;
+    const utter = new SpeechSynthesisUtterance(`Here’s your fix, Sibu. ${cleanText}`);
+    utter.rate = 0.9;
+    utter.onend = () => {
+      speaking = false;
+      pauseBtn.innerText = '⏸️ Pause'; // Reset button when finished
+    };
+    speechSynthesis.speak(utter);
+  });
+}
+
+// Pause / Resume button with emoji
+const pauseBtn = document.getElementById('pauseBtn');
+let paused = false;
+
+pauseBtn.addEventListener('click', () => {
+  if (paused) {
+    // Resume
+    if (audioInstance) audioInstance.play();
+    if (usingBrowserTTS) speechSynthesis.resume();
+    pauseBtn.innerText = '⏸️ Pause';
+    paused = false;
+  } else {
+    // Pause
+    if (audioInstance) audioInstance.pause();
+    if (usingBrowserTTS) speechSynthesis.pause();
+    pauseBtn.innerText = '▶️ Play';
+    paused = true;
+  }
+});
+
+// Keep observing changes continuously
+const observer = new MutationObserver(() => {
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(() => {
+    const node = document.querySelector('.solution-content, .right-panel');
+    if (node) speakSolution();
+  }, 300);
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Optional manual button trigger
+document.querySelector('#analyzeBtn')?.addEventListener('click', () => {
+  setTimeout(speakSolution, 1200);
+});
+</script>
+
+
+
+</div>
+
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="section">
+                    <h2>🎯 Step 1: Select Your Platform</h2>
+                    <div class="platform-grid">
+                        <div class="platform-card selected">
+                            <div class="platform-icon">💻</div>
+                            <div class="platform-name">VSCode</div>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">🧠</div>
+                            <div class="platform-name">IntelliJ IDEA</div>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">🍃</div>
+                            <div class="platform-name">MongoDB</div>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">🐍</div>
+                            <div class="platform-name">PyCharm</div>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">📓</div>
+                            <div class="platform-name">Jupyter</div>
+                        </div>
+                       <div class="platform-card">
+                      <div class="platform-icon">
+                      <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                      <path fill="#FF6C37" d="M256 0C114.836 0 0 114.836 0 256s114.836 256 256 256 256-114.836 256-256S397.164 0 256 0zm91.84 160.37l-27.17 168.37a12 12 0 01-16.57 10.55L239.91 314.8a12 12 0 00-14.66 3.17l-45.1 53.44c-6.17 7.32-16.84 8.46-24.16 2.29-7.32-6.17-8.46-16.84-2.29-24.16l61.4-72.77c5.1-6.04 14.22-7.27 20.98-2.75l64.77 43.37a12 12 0 0017.11-12.38L347.84 160.37c1.73-10.74-11.27-18.59-20.04-12.15z"/>
+                       </svg>
+                       </div>
+                       <div class="platform-name">Postman</div>
+                      </div>
+
+                        <div class="platform-card">
+                            <div class="platform-icon">🤖</div>
+                            <div class="platform-name">Android Studio</div>
+                        </div>
+                        <div class="platform-card">
+                       <div class="platform-icon">
+                    <svg width="32" height="32" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#CC2927" d="M256 0C114.836 0 0 114.836 0 256s114.836 256 256 256 256-114.836 256-256S397.164 0 256 0zm119.69 388.41l-47.47 27.38-87.22-50.35 47.47-27.37 87.22 50.34zM256 232.5l-87.22 50.35-47.47-27.37 87.22-50.34 47.47 27.36zM256 279.64l87.22 50.35-47.47 27.38-87.22-50.35 47.47-27.38zM256 153.22l-87.22 50.35-47.47-27.37 87.22-50.34 47.47 27.36z"/>
+                    </svg>
+                    </div>
+                    <div class="platform-name">SQL Server</div>
+                    </div>
+
+                        <div class="platform-card">
+                            <div class="platform-icon">🐳</div>
+                            <div class="platform-name">Docker</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>📝 Step 2: Paste Your Code</h2>
+                    <textarea placeholder="Paste your code snippet here...">function calculateTotal(items) {
+    let total = 0;
+    for (let i = 0; i <= items.length; i++) {
+        total += items[i].price;
+    }
+    return total;
+}</textarea>
+                </div>
+
+                <div class="section">
+                    <h2>⚠️ Step 3: Describe the Error</h2>
+                    <textarea placeholder="Describe the error or issue you're facing...">TypeError: Cannot read property 'price' of undefined
+at calculateTotal (script.js:4:23)</textarea>
+                </div>
+
+                <button class="analyze-btn">🔍 Analyze & Debug with AI</button>
+            </div>
+
+            <div class="right-panel">
+                <div class="section">
+                    <h2>✨ AI-Generated Solutions</h2>
+                    
+                    <div class="solution-box">
+                        <div class="solution-header">
+                            <div class="solution-title">🎯 Primary Solution (VSCode Specific)</div>
+                            <div class="votes">
+                                <button class="vote-btn">👍 245</button>
+                                <button class="vote-btn">👎 3</button>
+                            </div>
+                        </div>
+                        <div class="solution-content">
+                           <strong>Issue:</strong> Array index out of bounds. Your loop condition uses <code>&lt;=</code> which attempts to access an element beyond array length.
+
+<div class="code-snippet">
+<pre><code>
+for (let i = 0; i &lt; items.length; i++) {
+    total += items[i].price;
+}
+</code></pre>
+</div>
+
+
+                            <strong>💡 VSCode Tips:</strong>
+                            <ul style="margin-top: 10px; margin-left: 20px;">
+                                <li>Install "Error Lens" extension to see errors inline</li>
+                                <li>Use Cmd/Ctrl + Hover over error for quick fixes</li>
+                                <li>Set breakpoint (F9) and debug with F5</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="solution-box" style="border-left-color: #17a2b8;">
+                        <div class="solution-header">
+                            <div class="solution-title" style="color: #17a2b8;">🔄 Alternative Approach</div>
+                            <div class="votes">
+                                <button class="vote-btn">👍 189</button>
+                                <button class="vote-btn">👎 12</button>
+                            </div>
+                        </div>
+                        <div class="solution-content">
+                            <strong>Modern ES6+ Solution:</strong>
+                            <div class="code-snippet">const calculateTotal = (items) => 
+    items.reduce((total, item) => total + item.price, 0);</div>
+                            
+                            This approach eliminates index errors entirely and is more functional.
+                        </div>
+                    </div>
+
+                    <div class="solution-box" style="border-left-color: #ffc107;">
+                        <div class="solution-header">
+                            <div class="solution-title" style="color: #ffc107;">📚 Learn More</div>
+                            <div class="votes">
+                                <button class="vote-btn">📖 View Tutorial</button>
+                            </div>
+                        </div>
+                        <div class="solution-content">
+                            <strong>Related VSCode Resources:</strong><br>
+                            • Array iteration patterns in JavaScript<br>
+                            • Debugging with VSCode DevTools<br>
+                            • Common off-by-one errors
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>🚀 Platform Features</h2>
+                    <div class="features">
+                        <div class="feature-tag">AI-Powered Analysis</div>
+                        <div class="feature-tag">Community Voting</div>
+                        <div class="feature-tag">Code Templates</div>
+                        <div class="feature-tag">Platform Tutorials</div>
+                        <div class="feature-tag">Real-time Debugging</div>
+                        <div class="feature-tag">Extension Suggestions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

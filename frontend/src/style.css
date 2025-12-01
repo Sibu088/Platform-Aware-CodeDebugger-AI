@@ -1,0 +1,187 @@
+
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header h1 {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 40px;
+}
+
+.left-panel, .right-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 25px;
+    border: 2px solid #e9ecef;
+    position: relative; /* needed for arrow positioning */
+}
+
+.section h2 {
+    font-size: 20px;
+    color: #2a5298;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ——————————————————— NEW: MOVING ARROW STYLES ——————————————————— */
+.platform-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding-left: 50px; /* make room for the arrow */
+    --arrow-y: 80px;    /* fallback position */
+}
+
+.platform-grid::before {
+    content: "➤";
+    position: absolute;
+    left: 10px;
+    top: calc(var(--arrow-y) - 50%);
+    font-size: 48px;
+    font-weight: bold;
+    color: #667eea;
+    transition: top 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+    pointer-events: none;
+    z-index: 10;
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.4));
+}
+
+/* ——————————————————— END OF ARROW STYLES ——————————————————— */
+
+.platform-card {
+    background: white;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.platform-card:hover {
+    border-color: #667eea;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.platform-card.selected {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+}
+
+.platform-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.platform-name {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* rest of your existing styles (unchanged) */
+textarea { width: 100%; min-height: 150px; padding: 15px; border: 2px solid #dee2e6; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; resize: vertical; }
+textarea:focus { outline: none; border-color: #667eea; }
+
+.analyze-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+.analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+
+.solution-box { background: white; border-left: 4px solid #28a745; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+.solution-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.solution-title { font-weight: 600; color: #28a745; font-size: 16px; }
+.votes { display: flex; gap: 10px; align-items: center; }
+.vote-btn { background: #e9ecef; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+.vote-count { font-weight: 600; color: #667eea; }
+.solution-content { color: #495057; line-height: 1.6; font-size: 14px; }
+.code-snippet { background: #282c34; color: #abb2bf; padding: 15px; border-radius: 6px; margin: 10px 0; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; }
+.features { display: flex; gap: 15px; flex-wrap: wrap; }
+.feature-tag { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+.stats-bar { display: flex; justify-content: space-around; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); }
+.stat { text-align: center; }
+.stat-number { font-size: 28px; font-weight: 700; color: #667eea; }
+.stat-label { font-size: 12px; color: #6c757d; text-transform: uppercase; }
+
+@media (max-width: 1024px) {
+    .main-content { grid-template-columns: 1fr; }
+    .platform-grid { padding-left: 0; }
+    .platform-grid::before { display: none; } /* hide arrow on mobile */
+}
+/* Section headings (Step titles) */
+.section h2 {
+    font-size: 2rem; /* big */
+    font-weight: 900; /* extra bold */
+    color: #000000;   /* black */
+    margin-bottom: 20px;
+}
+
+/* Solution titles inside solution boxes */
+.solution-title {
+    font-size: 1.8rem; /* big */
+    font-weight: 900;   /* bold */
+    color: #000000;     /* black */
+}
+
+/* Optional: make platform names inside cards black and bold */
+.platform-name {
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #000000;
+}
