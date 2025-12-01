@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  base: "./", // works for Render root deployment
+  base: "./", // important: ensures app works at root for Render
   server: {
     port: process.env.PORT,
     host: true
