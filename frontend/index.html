@@ -261,7 +261,7 @@
             }
         }
        /* === Futuristic Luxury Clock === */
-
+ 
 /* Wrapper */
 .clock-container {
     display: flex;
@@ -611,6 +611,154 @@ body::before {
   #pauseBtn.speaking {
     box-shadow: 0 0 15px rgba(79, 172, 254, 0.8), 0 0 30px rgba(0, 242, 254, 0.5);
   }
+  /* === 2050 TECH ANIMATION OVERLAY === */
+
+/* Tech Animation Canvas */
+#tech-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.6;
+}
+
+/* Digital grid overlay */
+.grid-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 255, 193, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 193, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 2;
+    animation: grid-scroll 20s linear infinite;
+}
+
+@keyframes grid-scroll {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Scanning line effect */
+.scan-line {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 255, 193, 0.8), 
+        transparent);
+    box-shadow: 0 0 20px rgba(0, 255, 193, 0.6);
+    pointer-events: none;
+    z-index: 4;
+    animation: scan 4s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* Holographic corners */
+.holo-corner {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.holo-corner.top-left {
+    top: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    border-top: 2px solid rgba(0, 255, 193, 0.5);
+    border-left: 2px solid rgba(0, 255, 193, 0.5);
+    animation: corner-pulse 3s ease-in-out infinite;
+}
+
+.holo-corner.top-right {
+    top: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    border-top: 2px solid rgba(0, 255, 193, 0.5);
+    border-right: 2px solid rgba(0, 255, 193, 0.5);
+    animation: corner-pulse 3s ease-in-out infinite 0.5s;
+}
+
+.holo-corner.bottom-left {
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+    height: 100px;
+    border-bottom: 2px solid rgba(0, 255, 193, 0.5);
+    border-left: 2px solid rgba(0, 255, 193, 0.5);
+    animation: corner-pulse 3s ease-in-out infinite 1s;
+}
+
+.holo-corner.bottom-right {
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: 100px;
+    border-bottom: 2px solid rgba(0, 255, 193, 0.5);
+    border-right: 2px solid rgba(0, 255, 193, 0.5);
+    animation: corner-pulse 3s ease-in-out infinite 1.5s;
+}
+
+@keyframes corner-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* Floating particles container */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: rgba(0, 255, 193, 0.6);
+    pointer-events: none;
+    animation: float-up linear infinite;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(var(--drift));
+        opacity: 0;
+    }
+}
     </style>
 </head>
 <body>
@@ -674,6 +822,8 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 </script>
+
+
 <script type="module">
     const AGENT_URL = import.meta.env.VITE_ELEVENLABS_AGENT_URL;
 
@@ -702,7 +852,7 @@ updateClock();
       });
 
       // Play greeting
-      const utterance = new SpeechSynthesisUtterance("Hi Sibu, how can I assist you with your research and code today?");
+      const utterance = new SpeechSynthesisUtterance("How can I assist you with your research and code today?");
       utterance.rate = 0.9;
       speechSynthesis.speak(utterance);
 
@@ -756,14 +906,16 @@ function speakSolution() {
     document.querySelector('.right-panel')?.innerText ||
     "No solution found yet.";
 
-  let cleanText = solutionText
+ let cleanText = solutionText
     .replace(/Primary Solution.*/i, '')
     .replace(/VSCode Specific.*/i, '')
     .replace(/Click to expand.*/gi, '')
     .replace(/```[\s\S]*?```/g, 'Here is the fixed code: ')
+    .replace(/#[^\s]*/g, '')  // ⬅️ remove hashtags
     .replace(/\*/g, '')
     .replace(/\n+/g, '. ')
     .trim();
+
 
   if (cleanText.length < 10) return;
 
@@ -783,7 +935,7 @@ function speakSolution() {
       transcript: `Here’s your fix, Sibu. ${cleanText}`,
       voice: {
         mode: 'id',
-        id: '6ccbfb76-1fc6-48f7-b71d-91ac6298247b'
+        id: 'f2c3b1d4-8e97-4a7d-9bde-5f9a8c1d2e6f'
       },
       output_format: {
         container: 'wav',
@@ -857,10 +1009,32 @@ document.querySelector('#analyzeBtn')?.addEventListener('click', () => {
 });
 </script>
 
+<script>
+let currentIndex = 0;
 
+function slideCarousel(direction) {
+    const track = document.querySelector(".carousel-track");
+    const cards = document.querySelectorAll(".carousel-card");
+    const cardWidth = cards[0].offsetWidth + 20;
+
+    const maxIndex = cards.length - 3; // 3 cards visible at a time
+
+    currentIndex += direction;
+
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex > maxIndex) currentIndex = maxIndex;
+
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+}
+
+// Download all PDFs button
+document.getElementById("downloadAllBtn").addEventListener("click", () => {
+    window.open("YOUR_ZIP_FILE_URL_HERE.zip", "_blank");
+});
+</script>
 
 </div>
-
+    
         <div class="main-content">
             <div class="left-panel">
                 <div class="section">
@@ -917,19 +1091,14 @@ document.querySelector('#analyzeBtn')?.addEventListener('click', () => {
 
                 <div class="section">
                     <h2>📝 Step 2: Paste Your Code</h2>
-                    <textarea placeholder="Paste your code snippet here...">function calculateTotal(items) {
-    let total = 0;
-    for (let i = 0; i <= items.length; i++) {
-        total += items[i].price;
-    }
-    return total;
-}</textarea>
+                    <textarea placeholder="Paste your code snippet here...">
+</textarea>
                 </div>
 
                 <div class="section">
                     <h2>⚠️ Step 3: Describe the Error</h2>
-                    <textarea placeholder="Describe the error or issue you're facing...">TypeError: Cannot read property 'price' of undefined
-at calculateTotal (script.js:4:23)</textarea>
+                    <textarea placeholder="Describe the error or issue you're facing...">
+</textarea>
                 </div>
 
                 <button class="analyze-btn">🔍 Analyze & Debug with AI</button>
@@ -941,64 +1110,98 @@ at calculateTotal (script.js:4:23)</textarea>
                     
                     <div class="solution-box">
                         <div class="solution-header">
-                            <div class="solution-title">🎯 Primary Solution (VSCode Specific)</div>
+                            <div id="solutionTitle" class="solution-title">🎯 Primary Solution (VSCode Specific)</div>
                             <div class="votes">
                                 <button class="vote-btn">👍 245</button>
                                 <button class="vote-btn">👎 3</button>
                             </div>
                         </div>
                         <div class="solution-content">
-                           <strong>Issue:</strong> Array index out of bounds. Your loop condition uses <code>&lt;=</code> which attempts to access an element beyond array length.
+                           <strong>Issue:</strong> 
 
 <div class="code-snippet">
 <pre><code>
-for (let i = 0; i &lt; items.length; i++) {
-    total += items[i].price;
-}
+
+
 </code></pre>
 </div>
 
 
-                            <strong>💡 VSCode Tips:</strong>
-                            <ul style="margin-top: 10px; margin-left: 20px;">
-                                <li>Install "Error Lens" extension to see errors inline</li>
-                                <li>Use Cmd/Ctrl + Hover over error for quick fixes</li>
-                                <li>Set breakpoint (F9) and debug with F5</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="solution-box" style="border-left-color: #17a2b8;">
-                        <div class="solution-header">
-                            <div class="solution-title" style="color: #17a2b8;">🔄 Alternative Approach</div>
-                            <div class="votes">
-                                <button class="vote-btn">👍 189</button>
-                                <button class="vote-btn">👎 12</button>
-                            </div>
-                        </div>
-                        <div class="solution-content">
-                            <strong>Modern ES6+ Solution:</strong>
-                            <div class="code-snippet">const calculateTotal = (items) => 
-    items.reduce((total, item) => total + item.price, 0);</div>
                             
-                            This approach eliminates index errors entirely and is more functional.
+                            
                         </div>
                     </div>
 
-                    <div class="solution-box" style="border-left-color: #ffc107;">
-                        <div class="solution-header">
-                            <div class="solution-title" style="color: #ffc107;">📚 Learn More</div>
-                            <div class="votes">
-                                <button class="vote-btn">📖 View Tutorial</button>
-                            </div>
-                        </div>
-                        <div class="solution-content">
-                            <strong>Related VSCode Resources:</strong><br>
-                            • Array iteration patterns in JavaScript<br>
-                            • Debugging with VSCode DevTools<br>
-                            • Common off-by-one errors
-                        </div>
-                    </div>
+                   <!-- 🔥 DEBUGGING BOOKS CAROUSEL -->
+<div class="solution-box" style="border-left-color:#17a2b8;">
+    <div class="solution-header">
+        <div class="solution-title" style="color:#17a2b8;">🧠 Master Debugging – Essential Books</div>
+        <div class="votes">
+            <button class="vote-btn" id="downloadAllBtn">⬇️ Download All</button>
+        </div>
+    </div>
+
+    <div class="solution-content">
+
+        <!-- Carousel Container -->
+        <div class="carousel-container">
+            <button class="carousel-btn left" onclick="slideCarousel(-1)">⬅️</button>
+
+            <div class="carousel-track">
+
+                <!-- CARD 1 -->
+                <div class="carousel-card">
+                    <div class="carousel-icon">📘</div>
+                    <div class="carousel-title">The Debugging Book</div>
+                    <a class="carousel-link" href="https://debuggingbook.org/" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="carousel-card">
+                    <div class="carousel-icon">🔍</div>
+                    <div class="carousel-title">Effective Debugging (66 Techniques)</div>
+                    <a class="carousel-link" href="https://www.spinellis.gr/debugging/Debugging-Book-Sample.pdf" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+
+                <!-- CARD 3 -->
+                <div class="carousel-card">
+                    <div class="carousel-icon">🛠️</div>
+                    <div class="carousel-title">Debug It! (Pragmatic Programmers)</div>
+                    <a class="carousel-link" href="https://theswissbay.ch/pdf/Gentoomen%20Library/Programming/Pragmatic%20Programmers/Debug%20It%21.pdf" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+
+                <!-- CARD 4 -->
+                <div class="carousel-card">
+                    <div class="carousel-icon">📑</div>
+                    <div class="carousel-title">Software Debugging Techniques</div>
+                    <a class="carousel-link" href="https://cds.cern.ch/record/1100526/files/p71.pdf" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+
+                <!-- CARD 5 -->
+                <div class="carousel-card">
+                    <div class="carousel-icon">📚</div>
+                    <div class="carousel-title">Systemic Software Debugging</div>
+                    <a class="carousel-link" href="https://systemicsoftwaredebugging.com/wp-content/uploads/2012/06/systemic-software-debugging.pdf" target="_blank">
+                        Open PDF
+                    </a>
+                </div>
+
+            </div>
+
+            <button class="carousel-btn right" onclick="slideCarousel(1)">➡️</button>
+        </div>
+
+    </div>
+</div>
+
                 </div>
 
                 <div class="section">
@@ -1015,5 +1218,174 @@ for (let i = 0; i &lt; items.length; i++) {
             </div>
         </div>
     </div>
+<script>
+    const platformCards = document.querySelectorAll('.platform-card');
+    let platformIndex = 0;
+
+    // Create audio context for sound generation (unique name to avoid collisions)
+    const PlatformAudioContext = window.AudioContext || window.webkitAudioContext;
+    const platformAudioContext = new PlatformAudioContext();
+
+    // Professional tech sound generator
+    function playProfessionalTechSound() {
+        const now = platformAudioContext.currentTime;
+        
+        // Create buffer for white noise (for the "click" attack)
+        const bufferSize = platformAudioContext.sampleRate * 0.02;
+        const buffer = platformAudioContext.createBuffer(1, bufferSize, platformAudioContext.sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        // Generate white noise
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        
+        const noise = platformAudioContext.createBufferSource();
+        noise.buffer = buffer;
+        
+        const noiseGain = platformAudioContext.createGain();
+        const noiseFilter = platformAudioContext.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.value = 2000;
+        
+        noiseGain.gain.setValueAtTime(0.5, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.02);
+        
+        // Main tone oscillator (professional UI beep)
+        const osc1 = platformAudioContext.createOscillator();
+        const gain1 = platformAudioContext.createGain();
+        
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(1046.5, now); // C6 note
+        osc1.frequency.setValueAtTime(1318.5, now + 0.015); // E6 note
+        
+        gain1.gain.setValueAtTime(0, now);
+        gain1.gain.linearRampToValueAtTime(0.35, now + 0.005);
+        gain1.gain.linearRampToValueAtTime(0.3, now + 0.03);
+        gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        
+        // Harmonic oscillator
+        const osc2 = platformAudioContext.createOscillator();
+        const gain2 = platformAudioContext.createGain();
+        
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(2093, now); // C7 note
+        osc2.frequency.setValueAtTime(2637, now + 0.015); // E7 note
+        
+        gain2.gain.setValueAtTime(0, now);
+        gain2.gain.linearRampToValueAtTime(0.15, now + 0.005);
+        gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+        
+        // Master processing
+        const compressor = platformAudioContext.createDynamicsCompressor();
+        compressor.threshold.value = -20;
+        compressor.knee.value = 10;
+        compressor.ratio.value = 12;
+        compressor.attack.value = 0;
+        compressor.release.value = 0.1;
+        
+        const masterGain = platformAudioContext.createGain();
+        masterGain.gain.value = 0.7;
+        
+        // Connect noise
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(compressor);
+        
+        // Connect oscillators
+        osc1.connect(gain1);
+        gain1.connect(compressor);
+        
+        osc2.connect(gain2);
+        gain2.connect(compressor);
+        
+        compressor.connect(masterGain);
+        masterGain.connect(platformAudioContext.destination);
+        
+        // Play
+        noise.start(now);
+        osc1.start(now);
+        osc2.start(now);
+        
+        noise.stop(now + 0.02);
+        osc1.stop(now + 0.15);
+        osc2.stop(now + 0.1);
+    }
+
+    // Click to select
+    platformCards.forEach((card, index) => {
+        card.addEventListener('click', function() {
+            // Resume audio context on first user interaction
+            if (platformAudioContext.state === 'suspended') {
+                platformAudioContext.resume();
+            }
+            
+            playProfessionalTechSound();
+            
+            platformCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            platformIndex = index;
+        });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            
+            if (platformAudioContext.state === 'suspended') {
+                platformAudioContext.resume();
+            }
+            playProfessionalTechSound();
+            
+            platformIndex = (platformIndex + 1) % platformCards.length;
+            updatePlatformSelection();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            
+            if (platformAudioContext.state === 'suspended') {
+                platformAudioContext.resume();
+            }
+            playProfessionalTechSound();
+            
+            platformIndex = (platformIndex - 1 + platformCards.length) % platformCards.length;
+            updatePlatformSelection();
+        }
+    });
+
+    function updatePlatformSelection() {
+        platformCards.forEach(c => c.classList.remove('selected'));
+        platformCards[platformIndex].classList.add('selected');
+        
+        // Smooth scroll to selected card
+        platformCards[platformIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+        });
+    }
+
+    // Mouse wheel navigation (optional)
+    let wheelTimeout;
+    const gridEl = document.querySelector('.platform-grid');
+    if (gridEl) {
+        gridEl.addEventListener('wheel', (e) => {
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                if (platformAudioContext.state === 'suspended') {
+                    platformAudioContext.resume();
+                }
+                playProfessionalTechSound();
+                
+                if (e.deltaY > 0) {
+                    platformIndex = (platformIndex + 1) % platformCards.length;
+                } else {
+                    platformIndex = (platformIndex - 1 + platformCards.length) % platformCards.length;
+                }
+                updatePlatformSelection();
+            }, 50);
+        }, { passive: true });
+    }
+</script>
 </body>
 </html>
